@@ -19,30 +19,21 @@ class ClosingController extends Controller
         ]);
     }
 
-    // public function newShift() {
-    //     $lastclosing = Closing::latest()->first();
-
-    //     Closing::create([
-    //         'tgltransaksiwd' => now(),
-    //         'lastidtransaksiwd'=> $lastclosing->endidtransaksiwd,
-    //         'firstidtransaksiwd'=> $lastclosing->endidtransaksiwd + 1,
-    //         'openby'=> auth()->user()->username
-    //     ]);
-
-    //     return redirect('/settings/closing/daily');
-        
-    // }
 
     public function closeShift() {
         $this->authorize('access-closeShift');
 
         $last_closing = Closing::latest()->first();
-        // $last_transaction = ProcessLog::latest()->first();
+        // $last_success = ProcessLog::latest()->first();
         $lastrequest = ReqWede::latest()->first();
 
-        if ( $lastrequest) {
+        if ($lastrequest) {
         $last_closing->update([
-            // 'endidtransaksiwd' => $last_transaction->id,
+            // if ( !$last_success) {
+            //     $last_success->lastidtransaksiwd = 0,
+            //     $last_success->firstidtransaksiwd = 1
+            // }
+            // 'endidtransaksiwd' => 0,
             'status' => 'Closed',
             'closingby' => auth()->user()->username,
             'endreqwedeid' => $lastrequest->id
