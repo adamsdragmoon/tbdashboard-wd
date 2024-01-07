@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Closing;
 use App\Models\ProcessLog;
 use App\Models\ReqWede;
@@ -24,28 +25,43 @@ class ClosingController extends Controller
         $this->authorize('access-closeShift');
 
         $last_closing = Closing::latest()->first();
-        // $last_success = ProcessLog::latest()->first();
+        $last_success = ProcessLog::latest()->first();
         $lastrequest = ReqWede::latest()->first();
+        $nextIncrement = DB::select("SHOW TABLE STATUS LIKE 'process_logs'")[0]->Auto_increment;
+
+        if (!$last_success) {
+                $lastidtransaksiwd = 0;
+                $firstidtransaksiwd = 1;
+            } else {
+                $lastidtransaksiwd = $last_success->lastidtransaksiwd;
+                $firstidtransaksiwd = $last_success->lastidtransaksiwd + 1;
+            };
 
         if ($lastrequest) {
         $last_closing->update([
-            // if ( !$last_success) {
-            //     $last_success->lastidtransaksiwd = 0,
-            //     $last_success->firstidtransaksiwd = 1
-            // }
-            // 'endidtransaksiwd' => 0,
+            'lastidtransaksiwd' => $lastidtransaksiwd,
+            'firstidtransaksiwd'=> $firstidtransaksiwd,
+            'endidtransaksiwd' => $nextIncrement -1,
             'status' => 'Closed',
             'closingby' => auth()->user()->username,
-            'endreqwedeid' => $lastrequest->id
+            'endreqwedeid' => $lastrequest->id,
+            'closed_at' => now(),
         ]);
         }
 
         $lastclosing = Closing::latest()->first();
 
+        if(is_null($lastclosing->endidtransaksiwd)) {
+            $endidtransaksiwd = $nextIncrement - 1;
+        } else {
+            $endidtransaksiwd = $lastclosing->endidtransaksiwd;
+        };
+
         Closing::create([
             'tgltransaksiwd' => now(),
-            // 'lastidtransaksiwd'=> $lastclosing->endidtransaksiwd,
-            // 'firstidtransaksiwd'=> $lastclosing->endidtransaksiwd + 1,
+            'opened_at' => now(),
+            'lastidtransaksiwd'=> $endidtransaksiwd,
+            'firstidtransaksiwd'=> $endidtransaksiwd + 1,
             'openby'=> auth()->user()->username,
             'lastreqwedeid' => $lastrequest->id,
             'firstreqwedeid' => $lastrequest->id + 1
@@ -72,7 +88,8 @@ class ClosingController extends Controller
                 'endidtransaksiwd' => null,
                 'closingby' => null,
                 'status' => 'Active',
-                'endreqwedeid' => null
+                'endreqwedeid' => null,
+                'closed_at' => null,
             ]);
             
         }

@@ -17,42 +17,45 @@ class TransactionsController extends Controller
     //
     public function input() {
         $activeclosing = Closing::where('status', 'Active')->first();
-        $firstrecord = $activeclosing->firstreqwedeid;
+        $opendate = $activeclosing->opened_at;
+        
+        $agent = auth()->user()->agent;
+        $agentObject = json_decode($agent, true);
 
-        $agentCodes = json_decode(auth()->user()->agent, true);
-        $firstAgentCode = array_keys($agentCodes)[0];
-        $UserAgentCode = trim($firstAgentCode, "'");
-        $useragen = Agent::where('kodeagent', $UserAgentCode)->first();
+        $agentName = null;
+            foreach ($agentObject as $key => $value) {
+                // Remove the quotes around the key
+                $key = trim($key, "'");
+                if ($value === 'on') {
+                    $agentName = $key;
+                    break;
+                }
+            }
 
-        // $agent = auth()->user()->agent;
-        // $agentObject = json_decode($agent, true);
+        $useragen = Agent::where('kodeagent', $agentName)->first();
 
-        // $agentName = null;
-        //     foreach ($agentObject as $key => $value) {
-        //         // Remove the quotes around the key
-        //         $key = trim($key, "'");
-        //         if ($value === 'on') {
-        //             $agentName = $key;
-        //             break;
-        //         }
-        //     }
-
-        $datareqsum = ReqWede::where('agent',$UserAgentCode)
+        
+        $datareqsum = ReqWede::where('agent',$agentName)
                         ->whereIn('status', ['success', 'pending', 'open', 'process'])
-                        ->where('id', '>=', $firstrecord)
-                        ->orderBy('updated_at','desc')
+                        // ->where('id', '>=', $firstrecord)
+                        ->where('updated_at', '>=', $opendate)
+                        // ->orderBy('updated_at','desc')
                         ->get();
+
+        $datareqopen = ReqWede::where('agent',$agentName)
+                        ->where('status','open')
+                        // ->where('id', '>=', $firstrecord)
+                        ->where('updated_at', '>=', $opendate)
+                        // ->orderBy('updated_at','desc')
+                        ->get();
+        
 
         return view('transactions.inputreqwd', [
             'title' => 'Input Request Withdrawal',
             'agents' => $useragen,
             'provider' => $useragen->kodeprovider,
-            'data' => ReqWede::where('createdby',auth()->user()->username)
-                        ->whereIn('status', ['open', 'process'])
-                        ->orderBy('created_at','desc')
-                        ->get(),
+            'data' => $datareqopen,
             'totalreqall' => $datareqsum->sum('jumlahwd'),
-            'test' =>  $firstrecord
             
         ]);
 
@@ -106,18 +109,35 @@ class TransactionsController extends Controller
     public function grab(GrabWede $grab) {
 
         $count = GrabWede::where('processedby', auth()->user()->username ?? 'default')->count();
+        $useragen = auth()->user()->agent;
+        $useragen = json_decode($useragen, true);
+
+        $filtered = array_filter($useragen, function ($value) {
+            return $value == "on";
+        });
+
+        $result = array_keys($filtered);
+
+        $result = array_map(function ($item) {
+                return str_replace("'", "", $item);
+            }, $result);
+
         if($count > 0) {
             session()->flash('errorGrab', 'Silahkan selesaikan terlebih dahulu transaksi yang sudah digrab sebelumnya!');
             return redirect()->back();
         };
 
         
+        
 
         $req_data = ReqWede::select('uuid','tglwktrequest','memberid', 'saldomember', 'kategorirek', 'namarek', 'namabank', 'norek', 'jumlahwd', 'agent', 'createdby', 'created_at')
                     ->orderBy('created_at', 'asc')
                     // ->where('createdby',auth()->user()->username ?? 'default')
+                    ->whereIn('agent', $result)
                     ->where('status','open')
-                    ->take(5)->get();
+                    ->take(10)->get();
+
+        
 
        
         foreach ($req_data as $data) {
@@ -136,7 +156,10 @@ class TransactionsController extends Controller
             $grabbed_data['processedby'] = auth()->user()->username ?? 'default';
             $grabbed_data['tglwktcreate'] = $data->created_at;
             $grabbed_data->save();
-            ReqWede::where('uuid',$data->uuid ?? 'open')->update(['status' => 'process']);
+            ReqWede::where('uuid',$data->uuid ?? 'open')->update([
+                'status' => 'process',
+                'updatedby' => auth()->user()->username ?? 'default'
+            ]);
         }
 
         // return GrabWede::where('processedby',auth()->user()->username ?? 'default')->get();

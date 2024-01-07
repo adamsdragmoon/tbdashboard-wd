@@ -253,18 +253,32 @@
 
                 <div class="middle-content container-xxl p-0">
 
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+                            <div class="widget">
+                                <div widget-heading>
+                                    {{-- <h3>Rekap Transaksi Success</h3> --}}
+                                </div>
+                                <div class="widget-content">
+                                   <h4>Total Transaksi Per Agent : <span class="h3">{{ number_format($totalreqall) }}</span></h4>
+                                   <p>Transaksi termasuk : Open, Process, Pending, Success</p>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
                     <!-- BREADCRUMB -->
-                    <div class="page-meta">
+                    {{-- <div class="page-meta">
                         <nav class="breadcrumb-style-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="#">Withdrawal</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">All Transactions</li>
                             </ol>
                         </nav>
-                    </div>
+                    </div> --}}
                     <!-- /BREADCRUMB -->
     
                     {{-- <div class="row layout-top-spacing"> --}}
+                        
                     
                         <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
                             <div class="widget-content widget-content-area br-8">
@@ -273,9 +287,9 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Agen</th> <!-- Nama Agent dan username cs -->
-                                            <th>Info Transaksi</th> <!-- Waktu Request dan Waktu Input -->
-                                            <th>Info Member</th> <!--MemberID dan Last Saldo Member -->
-                                            <th>Detail Rekening</th> <!-- Nama Bank, No. Rek.-->
+                                            <th>Diminta Oleh</th> <!-- Waktu Request dan Waktu Input -->
+                                            <th>Dibuat Oleh</th> <!--MemberID dan Last Saldo Member -->
+                                            <th>Diproses Oleh</th> <!-- Nama Bank, No. Rek.-->
                                             <th>Jumlah Wede</th>
                                             <th>Status Wede</th>
                                             {{-- <th>Action</th> --}}
@@ -287,21 +301,24 @@
                                             <td>{{ $loop->iteration}}</td>
                                             <td>
                                                 <span class="h5">{{ $d->agent }} </span><br>
+                                                
                                             </td>
                                             <td>
                                                 Tanggal Request : <br> {{ $d->tglwktrequest }} <br>
-                                                Tanggal Input : <br> {{ $d->created_at}} <br>
-                                                Diinput Oleh : {{ $d->createdby }}
-                                               
-                                            </td>
-                                            <td>
-                                                MemberID : <br> {{  $d->memberid }} <br>
-                                                Last Saldo : {{  number_format($d->saldomember) }}
-                                            </td>
-                                            <td>
+                                                MemberID : {{  $d->memberid }} <br>
+                                                Last Saldo : {{  number_format($d->saldomember) }} <br>
                                                 {{ $d->namarek}} <br> 
                                                 {{-- {{ $d->kategorirek }}  --}}
                                                 {{ $d->namabank }} {{ $d->norek }}
+                                            </td>
+                                            <td>
+                                                Tanggal Input : <br> {{ $d->created_at}} <br>
+                                                cs : {{ $d->createdby }}
+                                            </td>
+                                            <td>
+                                                Tanggal Proses : <br> {{ $d->updated_at}} <br>
+                                                Diproses Oleh : <br>
+                                                {{ $d->updatedby }}
                                             </td>
                                             <td><strong class="h5">{{ number_format($d->jumlahwd) }}</strong></td>
                                             <td><div class="h4">{{ $d->status }}</div></td>
@@ -315,17 +332,7 @@
                             </div>
                         </div>
 
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
-                            <div class="widget">
-                                <div widget-heading>
-                                    {{-- <h3>Rekap Transaksi Success</h3> --}}
-                                </div>
-                                <div class="widget-content">
-                                   <h4>Total Transaksi All Per Agent (Open, Process, Pending, Success): <span class="h3">{{ number_format($totalreqall) }}</span></h4>
-                                    
-                                </div>
-                            </div>
-                        </div>
+                        
     
                     {{-- </div> --}}
 

@@ -63,8 +63,8 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Agen</th> <!-- Nama Agent dan username cs -->
-                                            <th>Dibuat Oleh</th> <!-- Waktu Request dan Waktu Input -->
                                             <th>Diminta Oleh</th>
+                                            <th>Dibuat Oleh</th> <!-- Waktu Request dan Waktu Input -->
                                             <th>Diproses Oleh</th>
                                             <th>Jumlah Wede</th>
                                             <th>Status</th>
@@ -80,11 +80,6 @@
                                                 <span class="h5">{{ $d->agent }} </span>
                                             </td>
                                             <td>
-                                                Tanggal Dibuat : <br> 
-                                                {{ $d->created_at}} <br>
-                                                Dibuat Oleh : {{  $d->createdby }} 
-                                            </td>
-                                            <td>
                                                 Tanggal Request : <br> 
                                                 {{ $d->tglwktrequest }} <br>
                                                 MemberID : {{  $d->memberid }} <br>
@@ -93,11 +88,15 @@
                                                 {{ strtoupper($d->namabank) }} {{ $d->norek }}
                                             </td>
                                             <td>
-                                                Tanggal Last Update : <br>
-                                                {{ $d->created_at }} <br>
+                                                Tanggal Dibuat : <br> 
+                                                {{ $d->tglwktdibuat}} <br>
+                                                Dibuat Oleh : {{  $d->dibuat_oleh }} 
+                                            </td>
+                                            
+                                            <td>
                                                 Tanggal Diproses : <br>
-                                                {{ $d->updated_at }} <br>
-                                                Diproses Oleh : {{ $d->updatedby }}
+                                                {{ $d->created_at }} <br>
+                                                Diproses Oleh : {{ $d->diproses_oleh }}
                                             </td>
                                             
                                             <td><strong class="h5">{{ number_format($d->jumlahwd) }}</strong></td>
@@ -119,15 +118,34 @@
                 </div>
 
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
-                <div class="widget">
-                    <div widget-heading>
-                        <h3>Rekap Transaksi Aktif</h3>
+                    <div class="widget">
+                        <div widget-heading>
+                            <h3>Rekap Transaksi</h3>
+                        </div>
+                        <div class="widget-content">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            
+                                            <th  scope="col">Keterangan</th>
+                                            <th  scope="col">Nilai</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Jumlah Transaksi Success</td>
+                                            <td>{{ number_format($jumlahdata) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Transaksi Success</td>
+                                            <td>{{ number_format($totaldata) }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                    <div class="widget-content">
-                        <h5>Jumlah Transaksi : {{ number_format($jumlahdata) }}</h5>
-                        <h5>Total Transaksi : <span class="display-6">{{ number_format($totaldata) }}</span></h5>
-                    </div>
-
                 </div>
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-5 layout-spacing">
                     <div class="widget">
@@ -142,13 +160,15 @@
                                         <tr>
                                             <th scope="col">Nama Agent</th>
                                             <th class="text-center" scope="col">Total Transaksi Success</th>
+                                            <th class="text-center" scope="col">Jumlah Transaksi Success</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($agents as $agent)
                                         <tr>
                                             <td>{{  $agent->namaagent }}</td>
-                                            <td class="text-center">{{ number_format($agent->totalTransaksiByStatus['success']?? 0) }}</td>
+                                            <td class="text-center">{{ number_format($agent->totalTransaksiByStatus['success']['total']?? 0) }}</td>
+                                            <td class="text-center">{{ number_format($agent->totalTransaksiByStatus['success']['jumlah']?? 0) }}</td>
                                             {{-- <td class="text-center">
                                                 <span class="badge badge-light-success">Approved</span>
                                             </td> --}}

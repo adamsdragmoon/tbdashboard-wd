@@ -11,20 +11,23 @@ class UserController extends Controller
 {
     //
     public function show() {
-        
-            
-            return view('settings.users', [
-                'name' => 'Adams',
-                'link' => '/settings/users',
-                'title' => 'Manage Users',
-                'users' => User::all(),
-                'dataagen' => Agent::all(),
-            ]);
+        $this->authorize('access-user');
+        return view('settings.users', [
+            'name' => 'Adams',
+            'link' => '/settings/users',
+            'title' => 'Manage Users',
+            'users' => User::all(),
+            'dataagen' => Agent::all(),
+        ]);
     }
 
     
     
     public function view(User $user){
+        if(auth()->user()->username !== $user->username) {
+            abort(403);
+        }
+        
         return view('settings.usershow', [
             'name' => 'Adams',
             'link' => '/settings/user',
@@ -61,17 +64,24 @@ class UserController extends Controller
     $user->save();
 
     return redirect()->route('settings.user', $user);
-}
-
+    }
 
 
     public function delete(User $user) {
+        
+        
+    $this->authorize('access-user');
+
+
         $user->delete();
         return redirect('/settings/users');
     }
 
    
     public function store(Request $request) {
+
+        $this->authorize('access-user');
+        
        
        $validated = $request->validate([
             'name' => 'required',
@@ -94,6 +104,17 @@ class UserController extends Controller
         
         // return $request->all();
         // return json_encode($request->agents);
+    }
+
+    public function resetlogin(User $user) {
+        $this->authorize('access-user');
+        
+        $user->update([
+            'isLogin' => 0
+        ]);
+
+        return redirect('/settings/users');
+
     }
 
     

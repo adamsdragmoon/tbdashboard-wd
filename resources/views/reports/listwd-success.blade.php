@@ -124,8 +124,27 @@
                             <h3>Rekap Transaksi Success</h3>
                         </div>
                         <div class="widget-content">
-                            <h5>Jumlah Transaksi : {{ number_format($jumlahdata) }}</h5>
-                            <h5>Total Transaksi : <span class="display-6">{{ number_format($totaldata) }}</span></h5>
+
+                            
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Keterangan</th>
+                                            <th scope="col">Nilai</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Jumlah Transaksi Success</td>
+                                            <td>{{ number_format($jumlahdata) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Transaksi Success</td>
+                                            <td>{{ number_format($totaldata) }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                         </div>
                     </div>
                 </div>

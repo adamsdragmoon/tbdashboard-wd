@@ -63,8 +63,8 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Agen</th> <!-- Nama Agent dan username cs -->
-                                            <th>Dibuat Oleh</th> <!-- Waktu Request dan Waktu Input -->
                                             <th>Diminta Oleh</th>
+                                            <th>Dibuat Oleh</th> <!-- Waktu Request dan Waktu Input -->
                                             <th>Diproses Oleh</th>
                                             <th>Jumlah Wede</th>
                                             <th>Status</th>
@@ -80,11 +80,6 @@
                                                 <span class="h5">{{ $d->agent }} </span>
                                             </td>
                                             <td>
-                                                Tanggal Dibuat : <br> 
-                                                {{ $d->created_at}} <br>
-                                                Dibuat Oleh : {{  $d->createdby }} 
-                                            </td>
-                                            <td>
                                                 Tanggal Request : <br> 
                                                 {{ $d->tglwktrequest }} <br>
                                                 MemberID : {{  $d->memberid }} <br>
@@ -93,8 +88,12 @@
                                                 {{ strtoupper($d->namabank) }} {{ $d->norek }}
                                             </td>
                                             <td>
-                                                Tanggal Last Update : <br>
-                                                {{ $d->created_at }} <br>
+                                                Tanggal Dibuat : <br> 
+                                                {{ $d->created_at}} <br>
+                                                Dibuat Oleh : {{  $d->createdby }} 
+                                            </td>
+                                            
+                                            <td>
                                                 Tanggal Diproses : <br>
                                                 {{ $d->updated_at }} <br>
                                                 Diproses Oleh : {{ $d->updatedby }}
@@ -123,5 +122,7 @@
         </div>
     </div>
 </div>
+
+
 
 @endsection

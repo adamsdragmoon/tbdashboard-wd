@@ -95,6 +95,11 @@ Route::get('/reports/list-wd-reject', [ ReportsController::class, 'listwdreject'
 Route::get('/reports/list-wd-personal', [ ReportsController::class, 'listwdpersonal' ] );
 Route::get('/reports/list-wd-all', [ ReportsController::class, 'listwdall' ] );
 
+// Route::get("/reports/datapending", [ ReportsController::class, 'datalistwdpending' ] );
+// Route::get("/reports/datareject", [ ReportsController::class, 'datalistwdreject' ] );
+
+
+
 
 Route::get('/reports/rekap-wd-open', [ ReportsController::class, 'rekapwdopen' ] );
 Route::get('/reports/rekap-wd-process', [ ReportsController::class, 'rekapwdprocess' ] );

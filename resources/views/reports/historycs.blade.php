@@ -72,7 +72,8 @@
                                             </td>
                                         
                                             <td>
-                                                <a href="/reports/hariancs/{{ $d->firstreqwedeid }}-{{ $d->endreqwedeid }}" class="btn btn-info"><i data-feather="eye" class="text-white"></i><span> Show Transactions</span></a>
+                                                {{-- <a href="/reports/hariancs/{{ $d->firstreqwedeid }}-{{ $d->endreqwedeid }}" class="btn btn-info"><i data-feather="eye" class="text-white"></i><span> Show Transactions</span></a> --}}
+                                                <a href="/settings/closing/{{ $d->id }}/listwd" class="btn btn-primary"><i data-feather="eye" class="file-text"></i>  Show Transaction</a>
                                             </td>
                                         </tr>
                                         @endforeach

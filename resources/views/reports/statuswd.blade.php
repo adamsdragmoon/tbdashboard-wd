@@ -46,14 +46,14 @@
                 <div class="middle-content container-xxl p-0">
 
                     <!-- BREADCRUMB -->
-                    <div class="page-meta">
+                    {{-- <div class="page-meta">
                         <nav class="breadcrumb-style-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="#">Withdrawal</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">All Transactions</li>
                             </ol>
                         </nav>
-                    </div>
+                    </div> --}}
                     <!-- /BREADCRUMB -->
     
                     {{-- <div class="row layout-top-spacing"> --}}
@@ -65,9 +65,9 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Agen</th> <!-- Nama Agent dan username cs -->
-                                            <th>Timestamp</th> <!-- Waktu Request dan Waktu Input -->
-                                            <th>Info Member</th> <!--MemberID dan Last Saldo Member -->
-                                            <th>Detail Rekening</th> <!-- Nama Bank, No. Rek.-->
+                                            <th>Diminta Oleh</th> <!-- Waktu Request dan Waktu Input -->
+                                            <th>Dibuat Oleh</th> <!--MemberID dan Last Saldo Member -->
+                                            <th>Diproses Oleh</th> <!-- Nama Bank, No. Rek.-->
                                             <th>Jumlah Wede</th>
                                             <th>Status Wede</th>
                                             {{-- <th>Action</th> --}}
@@ -79,21 +79,24 @@
                                             <td>{{ $loop->iteration}}</td>
                                             <td>
                                                 <span class="h5">{{ $d->agent }} </span><br>
-                                                cs : {{ $d->createdby }}
+                                                
                                             </td>
                                             <td>
                                                 Tanggal Request : <br> {{ $d->tglwktrequest }} <br>
-                                                Tanggal Input : <br> {{ $d->created_at}} <br>
-                                                Tanggal Update : <br> {{ $d->updated_at}}
-                                            </td>
-                                            <td>
                                                 MemberID : {{  $d->memberid }} <br>
-                                                Last Saldo : {{  number_format($d->saldomember) }}
-                                            </td>
-                                            <td>
+                                                Last Saldo : {{  number_format($d->saldomember) }} <br>
                                                 {{ $d->namarek}} <br> 
                                                 {{-- {{ $d->kategorirek }}  --}}
                                                 {{ $d->namabank }} {{ $d->norek }}
+                                            </td>
+                                            <td>
+                                                Tanggal Input : <br> {{ $d->created_at}} <br>
+                                                cs : {{ $d->createdby }}
+                                            </td>
+                                            <td>
+                                                Tanggal Proses : <br> {{ $d->updated_at}} <br>
+                                                Diproses Oleh : <br>
+                                                {{ $d->updatedby }}
                                             </td>
                                             <td><strong class="h5">{{ number_format($d->jumlahwd) }}</strong></td>
                                             <td><div class="h4">{{ $d->status }}</div></td>
@@ -114,7 +117,44 @@
                                     {{-- <h3>Rekap Transaksi Success</h3> --}}
                                 </div>
                                 <div class="widget-content">
-                                   <h4>Total Transaksi Success Per Agent: <span class="h3">{{ number_format($totalperagent) }}</span></h4>
+                                   <h4>Total Transaksi Per Agent : <span class="h3">{{ number_format($totalallperagent) }}</span></h4>
+                                   <p>Transaksi : Open, Process, Pending, Success</p>
+
+                                   <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Keterangan</th>
+                                            <th class="text-center" scope="col">Nilai</th>
+                                        </tr>
+                                    </thead>
+                                        <tr>
+                                            <td>Total Transaksi Open</td>
+                                            <td class="text-end">{{  number_format($totalopen) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Transaksi Process</td>
+                                            <td class="text-end">{{  number_format($totalprocess) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Transaksi Pending</td>
+                                            <td class="text-end">{{  number_format($totalpending) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Transaksi Success</td>
+                                            <td class="text-end">{{  number_format($totalsuccess) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Transaksi Reject</td>
+                                            <td class="text-end">{{  number_format($totalreject) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Grand Total</td>
+                                            <td class="text-end">{{  number_format($grandtotal) }}</td>
+                                        </tr>
+                                    <tbody>
+                                    </tbody>
+                                </table>
                                     
                                 </div>
                             </div>

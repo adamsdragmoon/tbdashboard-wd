@@ -63,12 +63,13 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Agen</th> <!-- Nama Agent dan username cs -->
-                                            <th>Timestamp</th> <!-- Waktu Request dan Waktu Input -->
-                                            <th>Info Member</th> <!--MemberID dan Last Saldo Member -->
-                                            <th>Detail Rekening</th> <!-- Nama Bank, No. Rek.-->
+                                            <th>Diminta Oleh</th>
+                                            <th>Dibuat Oleh</th> <!-- Waktu Request dan Waktu Input -->
+                                            <th>Diproses Oleh</th>
                                             <th>Jumlah Wede</th>
-                                            <th>Status Wede</th>
-                                            <th>Action</th>
+                                            <th>Status</th>
+                                            {{-- <th>Status Wede</th> --}}
+                                            {{-- <th>Action</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -76,34 +77,39 @@
                                         <tr>
                                             <td>{{ $loop->iteration}}</td>
                                             <td>
-                                                <span class="h5">{{ $d->agent }} </span><br>
-                                                cs : {{ $d->createdby }}
+                                                <span class="h5">{{ $d->agent }} </span>
                                             </td>
                                             <td>
-                                                Tanggal Request : {{ $d->tglwktrequest }} <br>
-                                                Tanggal Dibuat : {{ $d->created_at}} <br>
-                                                Tanggal Update : {{ $d->updated_at}}
-                                            </td>
-                                            <td>
+                                                Tanggal Request : <br> 
+                                                {{ $d->tglwktrequest }} <br>
                                                 MemberID : {{  $d->memberid }} <br>
-                                                Last Saldo : {{  number_format($d->saldomember) }}
-                                            </td>
-                                            <td>
+                                                Last Saldo : {{  number_format($d->saldomember) }} <br>
                                                 {{ $d->namarek}} <br> 
-                                                {{ $d->namabank }} {{ $d->norek }}
+                                                {{ strtoupper($d->namabank) }} {{ $d->norek }}
                                             </td>
-                                            <td><strong class="h5">{{ number_format($d->jumlahwd) }}</strong></td>
-                                            <td><div class="h4">{{ $d->status }}</div></td>
                                             <td>
-                                                <form action="/fin/reject-grabwd/{{ $d->uuid }}" method="POST">
-                                                    @csrf
-                                                <button type="submit" class="btn btn-danger"><i data-feather="x-square" class="text-white"></i>Reject</button>
-                                                </form>
+                                                Tanggal Dibuat : <br> 
+                                                {{ $d->created_at}} <br>
+                                                Dibuat Oleh : {{  $d->createdby }} 
                                             </td>
+                                            
+                                            <td>
+                                                Tanggal Diproses : <br>
+                                                {{ $d->updated_at }} <br>
+                                                Diproses Oleh : {{ $d->updatedby }}
+                                            </td>
+                                            
+                                            <td><strong class="h5">{{ number_format($d->jumlahwd) }}</strong></td>
+                                            {{-- <td><div class="h4">{{ $d->status }}</div></td> --}}
+                                            {{-- <td>
+                                                <a href="/reports/statuswd/{{ $d->uuid }}" class="badge bg-warning"><i data-feather="eye"></i>Update</a>
+                                            </td> --}}
+                                            <td> {{ $d->status}}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
+                                
                             </div>
                         </div>
     
