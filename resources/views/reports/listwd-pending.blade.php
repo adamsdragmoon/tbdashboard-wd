@@ -68,6 +68,7 @@
                                             <th>Diproses Oleh</th>
                                             <th>Jumlah Wede</th>
                                             <th>Status</th>
+                                            <th>Action</th>
                                             {{-- <th>Status Wede</th> --}}
                                             {{-- <th>Action</th> --}}
                                         </tr>
@@ -105,6 +106,16 @@
                                                 <a href="/reports/statuswd/{{ $d->uuid }}" class="badge bg-warning"><i data-feather="eye"></i>Update</a>
                                             </td> --}}
                                             <td> {{ $d->status}}</td>
+                                            <td>
+                                                <form action="/fin/updatepending/{{  $d->uuid }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success">Success</button>
+                                                </form><br>
+                                                <form action="/fin/rejectpending/{{  $d->uuid }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="btn btn-danger">Reject</button>
+                                                </form>
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </tbody>
