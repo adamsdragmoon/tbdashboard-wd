@@ -19,12 +19,12 @@ class AuthController extends Controller
 
     public function authenticate(Request $request) {
 
-        $adalogin = User::where('username', $request->username)->first();
+        // $adalogin = User::where('username', $request->username)->first();
 
 
-        if($adalogin->isLogin == true) {
-                return back()->with('errorLogin', 'User already login!');
-            }
+        // if($adalogin->isLogin == true) {
+        //         return back()->with('errorLogin', 'User already login!');
+        //     }
         
         $credentials = $request->validate([
             'username' => 'required',

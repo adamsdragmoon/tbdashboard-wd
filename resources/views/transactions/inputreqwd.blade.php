@@ -108,6 +108,23 @@
                                 
                             </form>
 
+                        @elseif ($provider === 'nexus')
+
+                            <form>
+
+                                <div class="row mb-4">
+                                    <div class="col-sm-12">
+                                        <div class="form-group mb-4">
+                                            <label for="exampleFormControlTextarea1"></label>
+                                            <textarea class="form-control" id="datapanel" name="datapanel" oninput="updateValueNEXUS()" rows="5"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="clearTextArea()" class="btn btn-primary">Clear</button>
+                                
+                                
+                            </form>
+
 
                             
                         @else
@@ -145,7 +162,7 @@
                         <form action="/cs/input-reqwd/create" method="POST">
                             @csrf
                             <div class="row mb-4">
-                                @if ($provider === 'sbo')
+                                @if ($provider === 'sbo' || $provider === 'nexus')
                                 <div class="col-lg-4 col-sm-12">
                                     <label for="tglwktrequest">Timestamp Request Wede</label>
                                     <input type="text" class="form-control" name="tglwktrequest" id="tglwktrequest" value="{{ now()->format('Y-m-d H:i:s') }}">
@@ -158,7 +175,7 @@
                                 @endif
 
 
-                                @if ($provider === 'sbo')
+                                @if ($provider === 'sbo' || $provider === 'nexus')
 
                                 @php
                                     $useragen = json_decode(auth()->user()->agent);
@@ -438,6 +455,55 @@ function updateValueIDNSports() {
     document.getElementById("kategorirek").value = "default";
     document.getElementById("agent").value = "{{ implode(', ', $kodeagen) }}";
 
+}
+
+function updateValueNEXUS() {
+    let datapanelValue = document.getElementById("datapanel").value;
+    const str = datapanelValue;
+
+    const regex_a = /\t/g;
+    const a = str.split(regex_a);
+
+    
+    const wktpart = a[0];
+    const wktparts = a[0].split(/\n/g);
+    const dateParts = wktparts[0].split("-");
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthNumber = months.indexOf(dateParts[1]) + 1;
+    const monthString = monthNumber < 10 ? '0' + monthNumber : monthNumber.toString();
+    // const waktu_request = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]} ${wktparts[1]}`;
+    const waktu_request = `${dateParts[2]}-${monthString}-${dateParts[0]} ${wktparts[1]}`;
+    const member_id = a[2];
+    const saldo_member = Number(a[9].replace(/,/g,""));
+    const jumlah_request = Number(a[7].replace(/,/g,""));
+    const nama_rek = a[6];
+
+    const detail_rek = a[5];
+    // const nama_bank = detail_rek.match(/[a-zA-Z]\w+/g)[4];
+    const matches = detail_rek.match(/[a-zA-Z]\w+/g);
+    const nama_bank = matches && matches.length > 4 ? matches[4] : matches[3];
+
+    // const matches = detail_rek.match(/[a-zA-Z]\w+/g);
+    // const nama_bank = matches && matches.length > 2 ? matches[2] : null;
+    const no_rek = detail_rek.match(/\d\w+/g)[0];
+
+    console.log(waktu_request);
+    console.log(member_id);
+    console.log(saldo_member);
+    console.log(jumlah_request);
+    console.log(nama_rek);
+    console.log(nama_bank);
+    console.log(no_rek);
+
+    document.getElementById("tglwktrequest").value = waktu_request;
+    document.getElementById("memberid").value = member_id;
+    document.getElementById("saldomember").value = saldo_member;
+    document.getElementById("jumlahwd").value = jumlah_request;
+    document.getElementById("namarek").value = nama_rek;
+    document.getElementById("namabank").value = nama_bank;
+    document.getElementById("norek").value = no_rek;
+    document.getElementById("kategorirek").value = "default";
+    document.getElementById("agent").value = "{{ implode(', ', $kodeagen) }}";
 }
 
 </script>
